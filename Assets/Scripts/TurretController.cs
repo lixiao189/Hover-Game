@@ -35,7 +35,7 @@ public class TurretController : MonoBehaviour
                     flame.Play();
 
                     // Add score
-                    gameController.AddScore(score);
+                    gameController.KillEnemy(score);
 
                     Destroy(gameObject, 0.5f);
                 }
@@ -95,7 +95,7 @@ public class TurretController : MonoBehaviour
         // Fire bullets
         timeSinceLastFire += Time.deltaTime;
 
-        if (timeSinceLastFire >= fireRate)
+        if (timeSinceLastFire >= fireRate && gameController.GetStatus() == GameController.GameStatus.Playing)
         {
             timeSinceLastFire = 0;
             // Fire a bullet

@@ -13,6 +13,8 @@ public class CarController : MonoBehaviour
     private int HP = 100;
     private GameController gameController;
 
+    public AudioSource explosionMusic;
+
     void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.tag == "EnemyBullet")
@@ -21,6 +23,11 @@ public class CarController : MonoBehaviour
             {
                 HP -= 10;
                 gameController.ChangeHP(HP);
+            }
+            else
+            {
+                explosionMusic.Play();
+                gameController.GameOver();
             }
         }
     }
@@ -34,9 +41,17 @@ public class CarController : MonoBehaviour
 
     void Update()
     {
-        // Read movement keys
-        moveHorizontal = Input.GetAxis("Horizontal");
-        moveVertical = Input.GetAxis("Vertical");
+        if (gameController.GetStatus() == GameController.GameStatus.Playing)
+        {
+            // Read movement keys
+            moveHorizontal = Input.GetAxis("Horizontal");
+            moveVertical = Input.GetAxis("Vertical");
+        }
+        else
+        {
+            moveHorizontal = 0;
+            moveVertical = 0;
+        }
     }
 
     void FixedUpdate()

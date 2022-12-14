@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
+    public enum GameStatus
+    {
+        Playing,
+        GameOver
+    }
+
     public int score = 0;
     public float time = 60f; // 3 minutes
 
@@ -12,6 +18,9 @@ public class GameController : MonoBehaviour
     private int turretCount = 0;
 
     private int tick = 0;
+    private GameStatus status;
+
+    public GameObject panel;
 
     void GenerateTurrets(int left, int right, int down, int up)
     {
@@ -36,12 +45,19 @@ public class GameController : MonoBehaviour
     }
 
     // Add score
-    public void AddScore(int newScoreValue)
+    public void KillEnemy(int newScoreValue)
     {
         score += newScoreValue;
         // Change score text
         var TextObj = GameObject.Find("Score Text");
         TextObj.GetComponent<UnityEngine.UI.Text>().text = "Score: " + score;
+
+        turretCount--;
+
+        if (turretCount <= 0)
+        {
+            GameOver();
+        }
     }
 
     // Update time text
@@ -57,16 +73,29 @@ public class GameController : MonoBehaviour
         TextObj.GetComponent<UnityEngine.UI.Text>().text = "Time: " + minuteString + ":" + secondString;
     }
 
+    public void GameOver()
+    {
+        status = GameStatus.GameOver;
+
+        // Show game over text
+        var TextObj = GameObject.Find("Game Over Text");
+        TextObj.GetComponent<UnityEngine.UI.Text>().text = "Game Over";
+
+        panel.SetActive(true);
+    }
+
+    public GameStatus GetStatus()
+    {
+        return status;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
+        panel = GameObject.Find("Panel");
+        panel.SetActive(false);
         GenerateTurrets(-120, 120, 0, 200);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
+        status = GameStatus.Playing;
     }
 
     void FixedUpdate()
@@ -77,6 +106,11 @@ public class GameController : MonoBehaviour
         {
             time -= 1;
             tick = 0;
+        }
+
+        if (time <= 0)
+        {
+            GameOver();
         }
     }
 }
