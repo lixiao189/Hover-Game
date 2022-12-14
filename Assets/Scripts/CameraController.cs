@@ -10,15 +10,21 @@ public class CameraController : MonoBehaviour
     private float wantedRotationAngle, currentRotationAngle;
     private float distance, height;
 
+    private GameController gameController;
+
     // Start is called before the first frame update
     void Start()
     {
         distance = Vector3.Distance(player.transform.position, transform.position);
         height = transform.position.y;
+        gameController = GameObject.Find("Game System").GetComponent<GameController>();
     }
     // Update is called once per frame
     void Update()
     {
+        if (gameController.GetStatus() == GameController.GameStatus.GameOver)
+            return;
+
         // Calculate the wanted and current rotation angle
         wantedRotationAngle = player.transform.eulerAngles.y;
         currentRotationAngle = transform.eulerAngles.y;
@@ -26,6 +32,9 @@ public class CameraController : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (gameController.GetStatus() == GameController.GameStatus.GameOver)
+            return;
+
         // Damp the rotation around the Y-axis
         currentRotationAngle = Mathf.LerpAngle(currentRotationAngle, wantedRotationAngle, rotationDamping * Time.deltaTime);
 

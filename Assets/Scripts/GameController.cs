@@ -100,6 +100,9 @@ public class GameController : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (status == GameStatus.GameOver)
+            return;
+
         UpdateTime();
         tick++;
         if (tick == 1 / Time.deltaTime)

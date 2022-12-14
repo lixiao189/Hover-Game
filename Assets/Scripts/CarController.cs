@@ -6,6 +6,7 @@ public class CarController : MonoBehaviour
 {
     public float turnSpeed, speed;
     public GameObject flame;
+    public GameObject explosion;
 
     private float moveHorizontal, moveVertical;
     private Rigidbody carRigidbody;
@@ -26,8 +27,12 @@ public class CarController : MonoBehaviour
             }
             else
             {
-                explosionMusic.Play();
                 gameController.GameOver();
+                explosion.SetActive(true);
+
+                explosionMusic.PlayScheduled(AudioSettings.dspTime + 5f);
+                // Unactive the game object after 5s
+                Destroy(gameObject, 5f);
             }
         }
     }
@@ -36,6 +41,7 @@ public class CarController : MonoBehaviour
     {
         carRigidbody = GetComponent<Rigidbody>();
         gameController = GameObject.Find("Game System").GetComponent<GameController>();
+        explosion.SetActive(false);
     }
 
 

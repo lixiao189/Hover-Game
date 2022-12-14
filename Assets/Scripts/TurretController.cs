@@ -79,6 +79,9 @@ public class TurretController : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (gameController.GetStatus() == GameController.GameStatus.GameOver)
+            return;
+
         // Rotate turret to look at the player
         var player = GameObject.FindGameObjectWithTag("Player");
         // Smoothly rotate rocket launcher towards the target point.
